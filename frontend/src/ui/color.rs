@@ -39,3 +39,7 @@ color!(form_text => hsluv!(0, 0, 100)); // #ffffff
 
 color!(variable => hsluv!(304.2, 83.8, 56.1)); // #d941e2
 color!(highlight => hsluv!(43.8, 100, 81.7)); // #ffbe85
+
+color!(encoding => hsluv!(17.3, 100, 62.2)); // #ff6347
+color!(decoding => hsluv!(140.9, 85.5, 65.3)); // #3CB371
+color!(dictionary => hsluv!(309.7, 63.5, 62.8)); // #DA70D6

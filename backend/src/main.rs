@@ -1,14 +1,7 @@
 use moon::*;
 
 async fn frontend() -> Frontend {
-    Frontend::new().title("New Project").append_to_head(
-        "
-        <style>
-            html {
-                background-color: black;
-            }
-        </style>",
-    )
+    Frontend::new().title("Vigenère Cipher")
 }
 
 async fn up_msg_handler(_: UpMsgRequest<()>) {}
