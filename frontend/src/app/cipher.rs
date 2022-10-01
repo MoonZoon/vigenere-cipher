@@ -3,7 +3,7 @@ use zoon::*;
 
 pub type Result = std::result::Result<String, Error>;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub enum Error {
     InvalidMessageChar(char),
     InvalidKeyChar(char),

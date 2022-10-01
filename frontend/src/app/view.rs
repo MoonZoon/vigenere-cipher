@@ -3,6 +3,33 @@ use zoon::{format, *};
 
 pub fn root() -> impl Element {
     El::new()
+        // @TODO improve `Scrollbars` and refactor once possible:
+        // - https://caniuse.com/css-scrollbar
+        // - https://css-tricks.com/the-current-state-of-styling-scrollbars-in-css/
+        .update_raw_el(|raw_el| {
+            raw_el
+                .style_group(
+                    StyleGroup::new("::-webkit-scrollbar")
+                        .style("height", "10px")
+                        .style("width", "10px"),
+                )
+                .style_group(
+                    StyleGroup::new("::-webkit-scrollbar-thumb")
+                        .style("background", color::scrollbar_thumb().into_cow_str())
+                        .style("border-radius", "6px"),
+                )
+                .style_group(
+                    StyleGroup::new("::-webkit-scrollbar-thumb:hover")
+                        .style("background", color::scrollbar_thumb_hover().into_cow_str()),
+                )
+                .style_group(
+                    StyleGroup::new("::-webkit-scrollbar-track")
+                        .style("background", color::background().into_cow_str())
+                        .style("border-radius", "6px"),
+                )
+        })
+        .s(Scrollbars::both())
+        .s(Padding::new().x(10).y(26))
         .s(Background::new().color(color::background_body()))
         .s(Height::fill())
         .s(Font::new()
@@ -29,8 +56,10 @@ fn content() -> impl Element {
 
 fn title() -> impl Element {
     El::with_tag(Tag::H1)
-        .s(Padding::new().top(26))
-        .s(Font::new().size(35).weight(FontWeight::SemiBold))
+        .s(Font::new()
+            .size(35)
+            .weight(FontWeight::SemiBold)
+            .wrap_anywhere())
         .child("Real-Time Vigenère Cipher")
 }
 
@@ -55,6 +84,7 @@ fn phrase() -> impl Element {
         .placeholder(
             Placeholder::new("Enter a phrase...").s(Font::new().color(color::form_placeholder())),
         )
+        .s(Width::fill())
         .text_signal(super::phrase().signal_cloned())
         .label_hidden("phrase")
         .on_change(|phrase| super::phrase().set(phrase))
