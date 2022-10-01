@@ -9,10 +9,11 @@ pub mod view;
 
 static KEY: &str = "°¡! RüST íS CóÓL ¡!°";
 
+#[allow(clippy::invisible_characters)]
 static DICTIONARY: &str = r##" !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ "##;
 
 #[static_ref]
-pub(self) fn phrase() -> &'static Mutable<String> {
+fn phrase() -> &'static Mutable<String> {
     Mutable::default()
 }
 

@@ -45,12 +45,10 @@ fn code(message: &str, encode: bool) -> Result {
             let coded_char_index = {
                 if encode {
                     message_char_index + key_char_index
+                } else if message_char_index >= key_char_index {
+                    message_char_index - key_char_index
                 } else {
-                    if message_char_index >= key_char_index {
-                        message_char_index - key_char_index
-                    } else {
-                        dictionary().len() - (key_char_index - message_char_index)
-                    }
+                    dictionary().len() - (key_char_index - message_char_index)
                 }
             } % dictionary().len();
             let coded_char = dictionary()[coded_char_index];
