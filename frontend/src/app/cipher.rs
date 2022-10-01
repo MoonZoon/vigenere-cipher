@@ -1,6 +1,8 @@
 use indexmap::IndexSet;
 use zoon::*;
 
+pub type Result = std::result::Result<String, Error>;
+
 #[derive(Debug, Clone, Copy)]
 pub enum Error {
     InvalidMessageChar(char),
@@ -17,15 +19,15 @@ fn key_chars() -> &'static Vec<char> {
     super::KEY.chars().collect()
 }
 
-pub fn encode(message: &str) -> Result<String, Error> {
+pub fn encode(message: &str) -> Result {
     code(message, true)
 }
 
-pub fn decode(encoded_message: &str) -> Result<String, Error> {
+pub fn decode(encoded_message: &str) -> Result {
     code(encoded_message, false)
 }
 
-fn code(message: &str, encode: bool) -> Result<String, Error> {
+fn code(message: &str, encode: bool) -> Result {
     // Alg: https://www.javatpoint.com/vigenere-cipher
     message
         .chars()

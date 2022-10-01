@@ -20,10 +20,11 @@ pub(self) fn phrase() -> &'static Mutable<String> {
 //    Signals
 // ------ ------
 
-fn encoded() -> impl Signal<Item = String> {
-    phrase().signal_ref(|phrase| cipher::encode(phrase).unwrap_throw())
+fn encoding_result() -> impl Signal<Item = cipher::Result> {
+    phrase().signal_ref(|phrase| cipher::encode(phrase))
 }
 
-fn decoded() -> impl Signal<Item = String> {
-    encoded().map(|encoded_message| cipher::decode(&encoded_message).unwrap_throw())
+fn decoding_result() -> impl Signal<Item = cipher::Result> {
+    encoding_result()
+        .map(|encoding_result| encoding_result.and_then(|message| cipher::decode(&message)))
 }

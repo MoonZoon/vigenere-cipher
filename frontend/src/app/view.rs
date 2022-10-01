@@ -1,5 +1,5 @@
-use crate::ui::color;
-use zoon::*;
+use crate::{app::cipher, ui::color};
+use zoon::{format, *};
 
 pub fn root() -> impl Element {
     El::new()
@@ -20,6 +20,7 @@ fn content() -> impl Element {
         .item(title())
         .item(key())
         .item(phrase())
+        .item(encoding_error())
         .item(encoded())
         .item(decoded())
         .item(dictionary())
@@ -60,18 +61,45 @@ fn phrase() -> impl Element {
         .on_focused_change(move |is_focused| focused.set_neq(is_focused))
 }
 
+fn encoding_error() -> impl Element {
+    El::new()
+        .s(Font::new().color(color::encoding()))
+        .child_signal(
+            super::encoding_result()
+                .map(Result::err)
+                .map_some(|error| match error {
+                    cipher::Error::InvalidMessageChar(character) => {
+                        format!("Invalid character: {character}")
+                    }
+                    cipher::Error::InvalidKeyChar(character) => {
+                        format!("Invalid key character: {character}")
+                    }
+                }),
+        )
+}
+
 fn encoded() -> impl Element {
-    key_value_field("Encoded", super::encoded(), color::encoding())
+    key_value_field(
+        "Encoded",
+        super::encoding_result().map(Result::ok),
+        color::encoding(),
+    )
 }
 
 fn decoded() -> impl Element {
-    key_value_field("Decoded", super::decoded(), color::decoding())
+    key_value_field(
+        "Decoded",
+        super::decoding_result().map(Result::ok),
+        color::decoding(),
+    )
 }
 
 fn dictionary() -> impl Element {
     Paragraph::new()
         .s(Font::new().color(color::text_main()))
-        .content("The encoding dictionary includes the following set of 225 ASCII characters:\n")
+        .content("The encoding dictionary includes the following set of ")
+        .content(super::DICTIONARY.len())
+        .content(" characters:\n")
         .content("[")
         .content(
             El::new()
@@ -89,7 +117,7 @@ fn dictionary() -> impl Element {
 fn footer() -> impl Element {
     Column::new()
         .s(Borders::new().top(Border::new().color(color::border())))
-        .s(Padding::new().top(10))
+        .s(Padding::new().top(11))
         .s(Gap::both(16))
         .item(inspired_by())
         .item(repo())
@@ -129,7 +157,7 @@ fn repo() -> impl Element {
 
 fn key_value_field<'a>(
     key: &str,
-    value: impl Signal<Item = impl IntoCowStr<'a>> + Unpin + 'static,
+    value: impl Signal<Item = impl IntoOptionCowStr<'a>> + Unpin + 'static,
     value_color: HSLuv,
 ) -> impl Element {
     Paragraph::new()
@@ -146,7 +174,7 @@ fn key_value_field<'a>(
                     .color(value_color)
                     .family([FontFamily::new("Courier New")])
                     .wrap_anywhere())
-                .child(Text::with_signal(value)),
+                .child_signal(value.map(|value| value.into_option_cow_str())),
         )
         .content(El::new().child("]"))
 }
