@@ -1,5 +1,6 @@
 use zoon::*;
 
+pub mod cipher;
 pub mod view;
 
 // ------ ------
@@ -8,27 +9,21 @@ pub mod view;
 
 static KEY: &str = "°¡! RüST íS CóÓL ¡!°";
 
-static DICTIONARY: &str = r##"!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ"##;
+static DICTIONARY: &str = r##" !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ "##;
 
 #[static_ref]
-fn phrase() -> &'static Mutable<String> {
-    Mutable::default()
-}
-
-#[static_ref]
-fn encoded() -> &'static Mutable<String> {
-    Mutable::default()
-}
-
-#[static_ref]
-fn decoded() -> &'static Mutable<String> {
+pub(self) fn phrase() -> &'static Mutable<String> {
     Mutable::default()
 }
 
 // ------ ------
-//   Commands
+//    Signals
 // ------ ------
 
-fn set_phrase(phrase: String) {
-    self::phrase().set(phrase)
+fn encoded() -> impl Signal<Item = String> {
+    phrase().signal_ref(|phrase| cipher::encode(phrase).unwrap_throw())
+}
+
+fn decoded() -> impl Signal<Item = String> {
+    encoded().map(|encoded_message| cipher::decode(&encoded_message).unwrap_throw())
 }

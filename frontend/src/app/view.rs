@@ -56,24 +56,16 @@ fn phrase() -> impl Element {
         )
         .text_signal(super::phrase().signal_cloned())
         .label_hidden("phrase")
-        .on_change(super::set_phrase)
+        .on_change(|phrase| super::phrase().set(phrase))
         .on_focused_change(move |is_focused| focused.set_neq(is_focused))
 }
 
 fn encoded() -> impl Element {
-    key_value_field(
-        "Encoded",
-        super::encoded().signal_cloned(),
-        color::encoding(),
-    )
+    key_value_field("Encoded", super::encoded(), color::encoding())
 }
 
 fn decoded() -> impl Element {
-    key_value_field(
-        "Decoded",
-        super::decoded().signal_cloned(),
-        color::decoding(),
-    )
+    key_value_field("Decoded", super::decoded(), color::decoding())
 }
 
 fn dictionary() -> impl Element {
@@ -87,7 +79,7 @@ fn dictionary() -> impl Element {
                     .color(color::dictionary())
                     .family([FontFamily::new("Courier")])
                     .wrap_anywhere())
-                .child([" ", super::DICTIONARY, " "].concat()),
+                .child(super::DICTIONARY),
         )
         .content("]")
 }

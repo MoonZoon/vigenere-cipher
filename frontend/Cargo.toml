@@ -6,3 +6,4 @@ publish.workspace = true
 
 [dependencies]
 zoon.workspace = true
+indexmap = { version = "1.9.1", default-features = false }
