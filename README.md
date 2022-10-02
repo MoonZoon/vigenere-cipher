@@ -9,6 +9,10 @@ Inspiration: [Building a Real-Time Web Cipher with Rust, Sycamore and Trunk](htt
 
 ---
 
+Version without global variables: [branch no_globals](https://github.com/MoonZoon/vigenere-cipher/tree/no_globals)
+
+---
+
 How to Run:
 
 1. Install the latest stable [Rust](https://www.rust-lang.org/tools/install). (Or upgrade with `rustup update stable`.)
